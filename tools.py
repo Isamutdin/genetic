@@ -2,9 +2,13 @@ import random
 from copy import deepcopy
 
 def clone(ind):
-    return deepcopy(ind)
+    return deepcopy(ind)#
 
 def generate_iter(container, generator):
+    """
+    :container: class
+    :generator: func
+    """
     return container(generator())
 
 def generate_repeat(container, n: int, object):
@@ -12,12 +16,26 @@ def generate_repeat(container, n: int, object):
     :container: class
     :n: len container
     :object: func
-    :args: аргументы функции
     """
     return container(object() for i in range(n))
 
 def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, generations):
+    """Классический ГА
+    1.Подсчет и "установка" пригодности
 
+    2.Запускается цикл поколение generations
+
+        1.Проводится отбор, который полность заменяет родительскую популяцию 1к1 при этом алгоритм требуют, 
+        что выбор был стохастический и возможность выбора одного и того же индивида несколько раз
+
+        2.Клонирование т. к. из-за выбора одного и того же индивида, несколько индивидов моге ссылаться на один и тот же object
+
+        3.Производится скрещивание с вероятностью cxpb и с вероятностью мутации mutb для формирование новой популяции
+
+        4.Подсчет и изменение пригодности
+
+    3.Возвращение окончательной популяции
+    """
     fitneses = list(map(fitfunc, population))
 
     for i in range(len(population)):
@@ -27,6 +45,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
         offspring = select(population, len(population))
         offspring = list(map(clone, offspring))
 
+        #Скрещивание и мутация (вынести в отдельюную функцию)
         for i in range(0, len(population), 2):
             if random.random() < cxpb:
                 offspring[i], offspring[i+1] = crossover(offspring[i], offspring[i+1])
@@ -34,6 +53,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
         for i in range(0, len(population)):
             if random.random() < mutb:
                 offspring[i] = mutation(offspring[i])
+        #####################################################
 
         population[:] = offspring
 
@@ -43,7 +63,6 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
             population[i].fitness.setValue(fitneses[i])
 
     return population
-
 
 
 class Fitness(object):
@@ -92,17 +111,3 @@ class Individ(list):
     def __init__(self, *args) -> None:
         super().__init__(*args)
         self.fitness = Fitness()
-
-#ДОРАБОТАТЬ
-"""
-def generate_individ(individ, genrator):
-    return individ(genrator())
-
-def generate_populations(container, object, n: int):
-    return container(object() for i in range(n))
-
-"""
-
-
-
-
