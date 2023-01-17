@@ -28,7 +28,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
         1.Проводится отбор, который полность заменяет родительскую популяцию 1к1 при этом алгоритм требуют, 
         что выбор был стохастический и возможность выбора одного и того же индивида несколько раз
 
-        2.Клонирование т. к. из-за выбора одного и того же индивида, несколько индивидов моге ссылаться на один и тот же object
+        2.Клонирование т. к. из-за выбора одного и того же индивида, несколько индивидов могут ссылаться на один и тот же object
 
         3.Производится скрещивание с вероятностью cxpb и с вероятностью мутации mutb для формирование новой популяции
 
@@ -71,11 +71,12 @@ class Fitness(object):
 
     wvalue = 0 #значение умноженное на вес
 
-    def __init__(self, values=None) -> None:
-        self.values = values
+    def __init__(self, value=None) -> None:
+        self.value = value
 
     def setValue(self, value) -> None:
         self.wvalue = value*self.weight #(значение) -> значение*вес
+        self.value = value
 
     def getValue(self):
         return self.wvalue
