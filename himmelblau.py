@@ -5,6 +5,7 @@ from func_mutation import *
 from tools import *
 from functools import partial
 
+
 BIT_LEN = 2
 POPULATION_LEN = 100
 CHANCE_CROSSOVER = 0.9
@@ -36,11 +37,12 @@ select =  partial(tournamentSel, tournsize=3)
 crossover = partial(crossBlend, alpha=0.5)
 mutation = partial(mutExchangeIndexes, chance=CHANCE_MUTATION_GEN)
 
-next_population = classicGA(population, himmelblau, select, crossover, mutation, 
+next_population, bookeval = classicGA(population, himmelblau, select, crossover, mutation, 
     CHANCE_CROSSOVER, CHANCE_MUTATION_INDIVID, GENERATIONS)
 
 print(max(next_population, key=attrgetter('fitness')), himmelblau(max(next_population, key=attrgetter('fitness'))))
 
+print(bookeval.select('gen', 'min'))
 """right answer
 (3.0; 2.0), (-2.805118; 3.131312), (-3.779310; -3.283186), (3.584458; -1.848126)
 """

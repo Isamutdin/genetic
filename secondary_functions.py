@@ -1,6 +1,4 @@
 import numpy
-from himmelblau import *
-
 
 
 class Statistic(object):
@@ -26,8 +24,14 @@ class Statistic(object):
 
         return entry
 
-class BookEvolution(list):
-    pass
 
-s = Statistic()
-print(s.statistics(population))
+class BookEvolution(list):
+
+    def write(self, **infos):
+        self.append(infos)
+
+    def select(self, *names):
+        if len(names) == 1:
+            return [entry.get(names[0], None) for entry in self]
+        return tuple([entry.get(name, None) for entry in self] for name in names)
+

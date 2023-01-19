@@ -1,5 +1,6 @@
 import random
 from copy import deepcopy
+from secondary_functions import *
 
 def clone(ind):
     return deepcopy(ind)#
@@ -20,6 +21,9 @@ def generate_repeat(container, n: int, object):
     return container(object() for i in range(n))
 
 def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, generations):
+    s = Statistic()
+    bookeval = BookEvolution()
+    
     """Классический ГА
     1.Подсчет и "установка" пригодности
 
@@ -41,7 +45,9 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
     for i in range(len(population)):
         population[i].fitness.setValue(fitneses[i])
 
-    for i in range(generations):
+    bookeval.write(gen=0, **s.statistics(population))
+
+    for g in range(1, generations+1):
         offspring = select(population, len(population))
         offspring = list(map(clone, offspring))
 
@@ -61,8 +67,10 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
 
         for i in range(len(population)):
             population[i].fitness.setValue(fitneses[i])
+        
+        bookeval.write(gen=g, **s.statistics(population))
 
-    return population
+    return population, bookeval
 
 
 class Fitness(object):
