@@ -38,7 +38,6 @@ def crossBlend(parent_1, parent_2, alpha):
 
     return parent_1, parent_2
 
-
 def crossSimulatedBinary(parent_1, parent_2, eta):
     for i in range(len(parent_1)):
         u = random.random()

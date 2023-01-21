@@ -67,7 +67,7 @@ def rankedSel(population, count, attr_fit='fitness'):
     sorted_population = sorted(population, key=attrgetter(attr_fit), reverse=True)
     len_ranked = len(sorted_population)
     sum_fits = int((len_ranked+1)*(len_ranked/2))
-    
+
     winners = []
     for i in range(count):
         n = random.random() * sum_fits
@@ -79,6 +79,16 @@ def rankedSel(population, count, attr_fit='fitness'):
                 break
 
     return winners
+
+# def rankedSel(population, count, attr_fit='fitness'):
+#     sorted_population = sorted(population, key=attrgetter(attr_fit))
+#     ranked = [i for i in range(len(sorted_population)) for n in range(i+1)]
+    
+#     winners = []
+#     for i in range(count):
+#         winners.append(sorted_population[random.choice(ranked)])
+
+#     return winners
 
 def fitnessScalingSel(population, count, interval, attr_fit='fitness'):
     """

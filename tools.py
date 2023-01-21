@@ -20,6 +20,20 @@ def generate_repeat(container, n: int, object):
     """
     return container(object() for i in range(n))
 
+
+def crossANDmut(population, crossover, mutation, cxpb, mutb):
+
+    for i in range(0, len(population), 2):
+        if random.random() < cxpb:
+            population[i], population[i+1] = crossover(population[i], population[i+1])
+
+    for i in range(0, len(population)):
+        if random.random() < mutb:
+            population[i] = mutation(population[i])
+    
+    return population
+
+
 def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, generations):
     s = Statistic()
     bookeval = BookEvolution()
@@ -51,15 +65,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
         offspring = select(population, len(population))
         offspring = list(map(clone, offspring))
 
-        #Скрещивание и мутация (вынести в отдельюную функцию)
-        for i in range(0, len(population), 2):
-            if random.random() < cxpb:
-                offspring[i], offspring[i+1] = crossover(offspring[i], offspring[i+1])
-
-        for i in range(0, len(population)):
-            if random.random() < mutb:
-                offspring[i] = mutation(offspring[i])
-        #####################################################
+        offspring = crossANDmut(offspring, crossover, mutation, cxpb, mutb)
 
         population[:] = offspring
 

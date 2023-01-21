@@ -14,8 +14,16 @@ class Statistic(object):
 
     def min(self, values):
         return numpy.min(values)
+    
+    def add(self, name, func, *args, **kwargs):
+        self.functions[name] = func(*args, **kwargs)
 
     def statistics(self, data):
+        """
+        1. На вход подается популяция
+        2. Формируется список со значениями, получаемыми по self.key (по умолчанию вытаскивает value)
+        3. Формируется словарь где будут храниться пара имя функции – функция(values)
+        """
         values = list(self.key(elem) for elem in data)
 
         entry = dict()
@@ -30,8 +38,12 @@ class BookEvolution(list):
     def write(self, **infos):
         self.append(infos)
 
-    def select(self, *names):
+    def get(self, *names):
+        """
+        на вход подаеться имена ключей в словаре
+        возвращает кортеж со списками значений по ключам
+        """
         if len(names) == 1:
-            return [entry.get(names[0], None) for entry in self]
+            return tuple(entry.get(names[0], None) for entry in self)
         return tuple([entry.get(name, None) for entry in self] for name in names)
 
