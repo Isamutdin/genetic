@@ -37,13 +37,14 @@ select =  partial(tournamentSel, tournsize=3)
 crossover = partial(crossBlend, alpha=0.5)
 mutation = partial(mutExchangeIndexes, chance=0.1)
 
-stats = Statistic()
-
+a = Statistic()
+b = Statistic(sum)
+stats = MoreStatistics([a, b])
 next_population, bookeval = classicGA(population, himmelblau, select, crossover, mutation, 
    stats, CHANCE_CROSSOVER, CHANCE_MUTATION_GEN, GENERATIONS)
 
 print(max(next_population, key=attrgetter('fitness')), himmelblau(max(next_population, key=attrgetter('fitness'))))
-
+print(bookeval.get("gen"), bookeval.sections['0'].get('min'))
 """right answer
 (3.0; 2.0), (-2.805118; 3.131312), (-3.779310; -3.283186), (3.584458; -1.848126)
 """

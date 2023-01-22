@@ -1,4 +1,3 @@
-from collections import defaultdict
 from functools import partial
 import numpy
 
@@ -62,14 +61,22 @@ class MoreStatistics(list):
 
 class BookEvolution(list):
 
+    def __init__(self):
+        self.sections = {}
+
     def write(self, **infos):
+
         for key, value in list(infos.items()):
             if isinstance(value, dict):
-                self.append(infos[key])
+                if key not in self.sections.keys():
+                    be= BookEvolution()
+                    be.write(**value)
+                    self.sections[key] = be
+                else:
+                    self.sections[key].write(**value)
                 del infos[key]
-        
-        if infos:
-            self.append(infos)
+
+        self.append(infos)
 
     def get(self, *names):
         """
@@ -89,9 +96,6 @@ if __name__ == "__main__":
     p[0].fitness.setValue(3)
     p[1].fitness.setValue(4)
     be = BookEvolution()
-    print(ms.statistics(p))
-    be.write(**ms.statistics(p))
-    print(ms.statistics(p))
-
-
-
+    
+    be.write(**ms.statistics(p), gen=0)
+    print(be)

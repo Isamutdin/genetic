@@ -22,7 +22,9 @@ def generate_repeat(container, n: int, object):
 
 
 def crossANDmut(population, crossover, mutation, cxpb, mutb):
-
+    """
+    производит мутацию и скрещивание поочередно
+    """
     for i in range(0, len(population), 2):
         if random.random() < cxpb:
             population[i], population[i+1] = crossover(population[i], population[i+1])
@@ -74,7 +76,6 @@ def classicGA(population, fitfunc, select, crossover, mutation, stats, cxpb, mut
             population[i].fitness.setValue(fitneses[i])
         
         bookeval.write(gen=g, **stats.statistics(population))
-
     return population, bookeval
 
 
