@@ -34,8 +34,7 @@ def crossANDmut(population, crossover, mutation, cxpb, mutb):
     return population
 
 
-def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, generations):
-    s = Statistic()
+def classicGA(population, fitfunc, select, crossover, mutation, stats, cxpb, mutb, generations):
     bookeval = BookEvolution()
     
     """Классический ГА
@@ -59,7 +58,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
     for i in range(len(population)):
         population[i].fitness.setValue(fitneses[i])
 
-    bookeval.write(gen=0, **s.statistics(population))
+    bookeval.write(gen=0, **stats.statistics(population))
 
     for g in range(1, generations+1):
         offspring = select(population, len(population))
@@ -74,7 +73,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, cxpb, mutb, gene
         for i in range(len(population)):
             population[i].fitness.setValue(fitneses[i])
         
-        bookeval.write(gen=g, **s.statistics(population))
+        bookeval.write(gen=g, **stats.statistics(population))
 
     return population, bookeval
 
