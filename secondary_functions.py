@@ -1,4 +1,6 @@
+from copy import deepcopy
 from functools import partial
+from operator import attrgetter
 import numpy
 
 
@@ -62,10 +64,10 @@ class MoreStatistics(list):
 class BookEvolution(list):
 
     def __init__(self):
-        self.sections = {}
+        self.sections = {}#Секциям присваивается номера в соответсвие с их последовадельностью передачи в метод write
 
     def write(self, **infos):
-
+        
         for key, value in list(infos.items()):
             if isinstance(value, dict):
                 if key not in self.sections.keys():
@@ -86,16 +88,36 @@ class BookEvolution(list):
         return tuple([entry.get(name, None) for entry in self] for name in names)
 
 
+class HallofBest(object):
+    
+    def __init__(self, size) -> None:
+        self.size = size
+        self.bests = list()
+
+    def register(self, population):
+        if (len(self.bests) == 0) and (self.size != 0):
+            self.bests.insert(0, deepcopy(population[0]))
+        
+        for ind in population:
+            if ind.fitness > self.bests[-1].fitness or len(self.bests) < self.size:
+                for best in self.bests:
+                    if best == ind:
+                        break
+                else:
+                    if len(self.bests) >= self.size:
+                        self.bests.pop(-1)
+                    self.bests.append(ind)
+
+        self.bests = sorted(self.bests, key=attrgetter('fitness'))
+    
+    def __str__(self) -> str:
+        return str(self.bests)
 
 if __name__ == "__main__":
     from tools import Individ
-    a = Statistic()
-    b = Statistic(key=sum)
-    ms = MoreStatistics([a, b])
     p = [Individ([6, 2, 4, 5, 6]), Individ([0, 2, 4, 6, 6])]
-    p[0].fitness.setValue(3)
+    p[0].fitness.setValue(5)
     p[1].fitness.setValue(4)
-    be = BookEvolution()
-    
-    be.write(**ms.statistics(p), gen=0)
-    print(be)
+    hob = HallofBest(5)
+    hob.register(p)
+    print(hob)
