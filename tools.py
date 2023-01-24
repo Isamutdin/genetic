@@ -32,13 +32,13 @@ def crossANDmut(population, crossover, mutation, cxpb, mutb):
     for i in range(0, len(population)):
         if random.random() < mutb:
             population[i] = mutation(population[i])
-    
+
     return population
 
 
 def classicGA(population, fitfunc, select, crossover, mutation, stats, cxpb, mutb, generations):
     bookeval = BookEvolution()
-    
+
     """Классический ГА
     1.Подсчет и "установка" пригодности
 
@@ -74,7 +74,7 @@ def classicGA(population, fitfunc, select, crossover, mutation, stats, cxpb, mut
 
         for i in range(len(population)):
             population[i].fitness.setValue(fitneses[i])
-        
+
         bookeval.write(gen=g, **stats.statistics(population))
     return population, bookeval
 
