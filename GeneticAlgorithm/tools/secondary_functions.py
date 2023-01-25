@@ -99,13 +99,13 @@ class HallofBest(object):
             self.bests.insert(0, deepcopy(population[0]))
         
         for ind in population:
-            if ind.fitness > self.bests[-1].fitness or len(self.bests) < self.size:
+            if ind.fitness > self.bests[0].fitness or len(self.bests) < self.size:
                 for best in self.bests:
                     if best == ind:
                         break
                 else:
                     if len(self.bests) >= self.size:
-                        self.bests.pop(-1)
+                        self.bests.pop(0)
                     self.bests.append(ind)
 
         self.bests = sorted(self.bests, key=attrgetter('fitness'))
@@ -113,11 +113,16 @@ class HallofBest(object):
     def __str__(self) -> str:
         return str(self.bests)
 
+    def __iter__(self):
+        return iter(self.bests)
+
 if __name__ == "__main__":
-    from tools import Individ
+    from base import Individ
     p = [Individ([6, 2, 4, 5, 6]), Individ([0, 2, 4, 6, 6])]
-    p[0].fitness.setValue(5)
+    p[0].fitness.setValue(3)
     p[1].fitness.setValue(4)
     hob = HallofBest(5)
     hob.register(p)
-    print(hob)
+    p.extend(hob)
+    print(p)
+    
