@@ -1,8 +1,7 @@
 import random
-from tools.secondary_functions import BookEvolution
-from tools.base import clone 
-
-
+from secondary_functions import BookEvolution
+from base import clone 
+     
 def crossANDmut(population, crossover, mutation, cxpb, mutb):
     """
     производит мутацию и скрещивание поочередно

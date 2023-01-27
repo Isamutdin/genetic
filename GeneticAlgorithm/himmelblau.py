@@ -2,10 +2,10 @@ import random
 from func_crossing import *
 from func_selection import *
 from func_mutation import *
-from tools.base import *
+from base import *
 from algorithms import classicGA
 from functools import partial
-from tools.secondary_functions import *
+from secondary_functions import *
 
 
 BIT_LEN = 2
