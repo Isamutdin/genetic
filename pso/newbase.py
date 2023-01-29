@@ -100,12 +100,12 @@ def himmelblau(ind):#функция для подсчета приспасобл
     x, y = ind
     return ((x**2 + y - 11)**2 + (x + y**2 - 7)**2)
 
-
+#Инициализация#####################################################################################
 w = 0.72984
 c1 = 2.05
 c2 = 2.05
 BIT_LEN = 2
-GENERATION = 150
+GENERATION = 100
 SWARM_LEN = 100
 
 Fitness.weight = -1
@@ -122,9 +122,9 @@ for i in range(len(swarm)):
     if swarm[i].fitness > g_best.fitness:
         g_best = clone(swarm[i])
         g_best.fitness.setValue(f)
+###################################################################################################
 
-
-
+#Алгоритм##########################################################################################
 for t in range(GENERATION):
     for i in range(SWARM_LEN):
         r1 = Array([random.random() for _ in range(BIT_LEN)])
@@ -143,7 +143,7 @@ for t in range(GENERATION):
             if swarm[i].fitbest > g_best.fitness:
                 g_best = Particle(swarm[i].best)
                 g_best.fitness.setValue(himmelblau(g_best))
-    
+###################################################################################################
 print(g_best)
 
 
