@@ -47,7 +47,7 @@ next_population, bookeval = classicGA(population, himmelblau, select, crossover,
 
 print(max(next_population, key=attrgetter('fitness')), himmelblau(max(next_population, key=attrgetter('fitness'))))
 
-print(bookeval.get("gen"), bookeval.sections['0'].get('min', 'max'))
+#print(bookeval.get("gen"), bookeval.sections['0'].get('min', 'max'))
 
 """right answer
 (3.0; 2.0), (-2.805118; 3.131312), (-3.779310; -3.283186), (3.584458; -1.848126)

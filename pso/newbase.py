@@ -3,7 +3,7 @@ import random
 
 
 class Array(list):
-    
+
     def __add__(self, other):
         result = Array()
         term = other if isinstance(other, (tuple, list)) else [other for i in range(len(self))]
@@ -46,7 +46,6 @@ class Particle(Array):
         self.fitness = Fitness()
         self.best = Array([pos for pos in self])
         self.fitbest = Fitness(-(10**6))
-
 
 
 class Fitness(object):
@@ -101,9 +100,9 @@ def himmelblau(ind):#функция для подсчета приспасобл
     return ((x**2 + y - 11)**2 + (x + y**2 - 7)**2)
 
 #Инициализация#####################################################################################
-w = 0.72984
-c1 = 2.05
-c2 = 2.05
+w = 0.5
+c1 = 3.5
+c2 = 0.5
 BIT_LEN = 2
 GENERATION = 100
 SWARM_LEN = 100
@@ -125,7 +124,7 @@ for i in range(len(swarm)):
 ###################################################################################################
 
 #Алгоритм##########################################################################################
-for t in range(GENERATION):
+for t in range(1, GENERATION+1):
     for i in range(SWARM_LEN):
         r1 = Array([random.random() for _ in range(BIT_LEN)])
         r2 = Array([random.random() for _ in range(BIT_LEN)])
@@ -143,6 +142,11 @@ for t in range(GENERATION):
             if swarm[i].fitbest > g_best.fitness:
                 g_best = Particle(swarm[i].best)
                 g_best.fitness.setValue(himmelblau(g_best))
+    
+    w = (0.4/(GENERATION**2))*(t-GENERATION)**2 + 0.4
+    c1 = (-3*t)/GENERATION + 3.5
+    c2 = (3*t)/GENERATION + 0.5
+
 ###################################################################################################
 print(g_best)
 
