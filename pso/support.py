@@ -2,7 +2,7 @@ from copy import deepcopy
 from operator import attrgetter
 
 
-class HallofBest(object):
+class HallofBest():
     
     def __init__(self, size) -> None:
         self.size = size
