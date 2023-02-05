@@ -61,6 +61,7 @@ class MoreStatistics(list):
 
         return statistic
 
+
 class BookEvolution(list):
 
     def __init__(self):

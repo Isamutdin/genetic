@@ -1,9 +1,10 @@
 from copy import deepcopy
+from functools import partial
 import random
 
-
 class Array(list):
-
+    
+    #Сложение#######################################################################################
     def __add__(self, other):
         result = Array()
         term = other if isinstance(other, (tuple, list)) else [other for i in range(len(self))]
@@ -13,7 +14,9 @@ class Array(list):
 
     def __radd__(self, other):
         return self.__add__(other)
+    ###############################################################################################
 
+    #Вычитание#####################################################################################
     def __sub__(self, other):
         result = Array()
         other = other if isinstance(other, (tuple, list)) else [other for i in range(len(self))]
@@ -27,7 +30,9 @@ class Array(list):
         for n in range(len(self)):
             result.append(other[n]-self[n])
         return result
+    ###############################################################################################
 
+    #Умножение#####################################################################################
     def __mul__(self, other):
         result = Array()
         other = other if isinstance(other, (tuple, list)) else [other for i in range(len(self))]
@@ -37,6 +42,7 @@ class Array(list):
 
     def __rmul__(self, other):
         return self.__mul__(other)
+    ###############################################################################################
 
 
 class Particle(Array):
@@ -44,8 +50,20 @@ class Particle(Array):
         super().__init__(*args)
         self.velocity = Array([0 for i in range(len(self))])
         self.fitness = Fitness()
-        self.best = Array([pos for pos in self])
-        self.fitbest = Fitness(-(10**6))
+        self.best = Best([pos for pos in self])
+
+
+class Best(Array):
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.fitness = Fitness()
+    
+    def update(self, particale):
+        if particale.fitness > self.fitness:
+            self[:] = particale[:]
+            self.fitness.setValues(particale.fitness.getValue())
+            return True
+        return False
 
 
 class Fitness(object):
@@ -57,14 +75,17 @@ class Fitness(object):
     def __init__(self, value=None) -> None:
         self.value = value
 
-    def setValue(self, value) -> None:
+    def setValues(self, value) -> None:
         self.wvalue = value*self.weight
         self.value = value
 
-    def getValue(self):
+    def getWValue(self):
         return self.wvalue
 
-    def delValues(self) -> None:
+    def getValue(self):
+        return self.value
+
+    def delWValues(self) -> None:
         self.wvalue = 0
 
     #Сравнение Fitness #########################
@@ -93,64 +114,3 @@ class Fitness(object):
 
 def clone(ind):
     return deepcopy(ind)
-
-
-def himmelblau(ind):#функция для подсчета приспасобленности
-    x, y = ind
-    return ((x**2 + y - 11)**2 + (x + y**2 - 7)**2)
-
-#Инициализация#####################################################################################
-w = 0.5
-c1 = 3.5
-c2 = 0.5
-BIT_LEN = 2
-GENERATION = 100
-SWARM_LEN = 100
-
-Fitness.weight = -1
-
-swarm = [Particle([random.uniform(-5, 5) for i in range(BIT_LEN)]) for t in range(SWARM_LEN)]
-g_best = Particle([random.uniform(-5, 5) for i in range(BIT_LEN)])
-g_best.fitness.setValue(himmelblau(g_best))
-
-for i in range(len(swarm)):
-    f = himmelblau(swarm[i])
-    swarm[i].fitness.setValue(f)
-    swarm[i].best = Array(swarm[i])
-    swarm[i].fitbest.setValue(f)
-    if swarm[i].fitness > g_best.fitness:
-        g_best = clone(swarm[i])
-        g_best.fitness.setValue(f)
-###################################################################################################
-
-#Алгоритм##########################################################################################
-for t in range(1, GENERATION+1):
-    for i in range(SWARM_LEN):
-        r1 = Array([random.random() for _ in range(BIT_LEN)])
-        r2 = Array([random.random() for _ in range(BIT_LEN)])
-
-        swarm[i].velocity = w*swarm[i].velocity + \
-            (c1*r1*(swarm[i].best - swarm[i])) + \
-            (c2*r2*(g_best - swarm[i]))
-
-        swarm[i][:] = swarm[i][:] + swarm[i].velocity
-        swarm[i].fitness.setValue(himmelblau(swarm[i]))
-
-        if swarm[i].fitness > swarm[i].fitbest:
-            swarm[i].best = Array(swarm[i])
-            swarm[i].fitbest.setValue(himmelblau(swarm[i].best))
-            if swarm[i].fitbest > g_best.fitness:
-                g_best = Particle(swarm[i].best)
-                g_best.fitness.setValue(himmelblau(g_best))
-    
-    w = (0.4/(GENERATION**2))*(t-GENERATION)**2 + 0.4
-    c1 = (-3*t)/GENERATION + 3.5
-    c2 = (3*t)/GENERATION + 0.5
-
-###################################################################################################
-print(g_best)
-
-
-"""right answer
-(3.0; 2.0), (-2.805118; 3.131312), (-3.779310; -3.283186), (3.584458; -1.848126)
-"""
