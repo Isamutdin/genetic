@@ -1,12 +1,12 @@
 import random
-from secondary_functions import BookEvolution
+from func.secondary_functions import BookEvolution
 from base import clone 
      
 def crossANDmut(population, crossover, mutation, cxpb, mutb):
     """
     производит мутацию и скрещивание поочередно
     """
-    for i in range(0, len(population), 2):
+    for i in range(0, len(population)-1):
         if random.random() < cxpb:
             population[i], population[i+1] = crossover(population[i], population[i+1])
 
@@ -73,4 +73,38 @@ def classicGA(population, fitfunc, select, crossover, mutation, stats, cxpb, mut
             population[i].fitness.setValue(fitneses[i])
 
         bookeval.write(gen=g, **stats.statistics(population))
+
+    return population, bookeval
+
+
+def classicGAElitism(population, fitfunc, select, crossover, mutation, stats, cxpb, mutb, generations, hob):
+    bookeval = BookEvolution()
+
+    fitneses = list(map(fitfunc, population))
+
+    for i in range(len(population)):
+        population[i].fitness.setValue(fitneses[i])
+
+    hob.register(population)
+
+    bookeval.write(gen=0, **stats.statistics(population))
+
+    for g in range(1, generations+1):
+        offspring = select(population, len(population)-hob.size)
+        offspring = list(map(clone, offspring))
+
+        offspring = crossANDmut(offspring, crossover, mutation, cxpb, mutb)
+
+        offspring.extend(hob)
+        hob.register(offspring)
+
+        population[:] = offspring
+
+        fitneses = list(map(fitfunc, population))
+
+        for i in range(len(population)):
+            population[i].fitness.setValue(fitneses[i])
+
+        bookeval.write(gen=g, **stats.statistics(population))
+
     return population, bookeval

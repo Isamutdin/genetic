@@ -1,11 +1,11 @@
 import random 
-from func_crossing import *
-from func_selection import *
-from func_mutation import *
+from func.secondary_functions import *
+from func.func_crossing import *
+from func.func_selection import *
+from func.func_mutation import *
 from base import *
-from algorithms import classicGA
+from algorithms import classicGA, classicGAElitism
 from functools import partial
-from secondary_functions import *
 
 
 BIT_LEN = 2
@@ -42,12 +42,12 @@ mutation = partial(mutExchangeIndexes, chance=0.1)
 a = Statistic()
 b = Statistic(sum)
 stats = MoreStatistics([a, b])
-next_population, bookeval = classicGA(population, himmelblau, select, crossover, mutation, 
-   stats, CHANCE_CROSSOVER, CHANCE_MUTATION_GEN, GENERATIONS)
+next_population, bookeval = classicGAElitism(population, himmelblau, select, crossover, mutation, 
+   stats, CHANCE_CROSSOVER, CHANCE_MUTATION_GEN, GENERATIONS, HallofBest(5))
 
 print(max(next_population, key=attrgetter('fitness')), himmelblau(max(next_population, key=attrgetter('fitness'))))
 
-#print(bookeval.get("gen"), bookeval.sections['0'].get('min', 'max'))
+print(bookeval.get("gen"), bookeval.sections['0'].get('min'))
 
 """right answer
 (3.0; 2.0), (-2.805118; 3.131312), (-3.779310; -3.283186), (3.584458; -1.848126)

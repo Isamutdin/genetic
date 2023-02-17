@@ -118,11 +118,11 @@ class HallofBest(object):
         return iter(self.bests)
 
 if __name__ == "__main__":
-    from base import Individ
-    p = [Individ([6, 2, 4, 5, 6]), Individ([0, 2, 4, 6, 6])]
-    p[0].fitness.setValue(3)
-    p[1].fitness.setValue(4)
-    hob = HallofBest(5)
-    hob.register(p)
-    p.extend(hob)
-    print(p)
+    # p = [Individ([6, 2, 4, 5, 6]), Individ([0, 2, 4, 6, 6])]
+    # p[0].fitness.setValue(3)
+    # p[1].fitness.setValue(4)
+    # hob = HallofBest(5)
+    # hob.register(p)
+    # p.extend(hob)
+    # print(p, (hob.size))
+    pass
